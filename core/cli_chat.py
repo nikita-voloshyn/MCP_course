@@ -22,7 +22,10 @@ class CliChat(Chat):
         return await self.doc_client.list_prompts()
 
     async def list_docs_ids(self) -> list[str]:
-        return await self.doc_client.read_resource("docs://documents")
+        result = await self.doc_client.read_resource("docs://documents")
+        if isinstance(result, str):
+            return [r for r in result.split("\n") if r]
+        return result
 
     async def get_doc_content(self, doc_id: str) -> str:
         return await self.doc_client.read_resource(f"docs://documents/{doc_id}")

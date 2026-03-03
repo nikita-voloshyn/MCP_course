@@ -29,13 +29,13 @@ def edit_doc(doc_id: str, new_content: str) -> str:
     return f"Document '{doc_id}' updated successfully."
 
 
-@mcp.resource("docs://list")
+@mcp.resource("docs://documents")
 def list_docs() -> str:
     """Return all document IDs."""
     return "\n".join(docs.keys())
 
 
-@mcp.resource("docs://{doc_id}")
+@mcp.resource("docs://documents/{doc_id}")
 def get_doc(doc_id: str) -> str:
     """Return the contents of a particular document."""
     if doc_id not in docs:
