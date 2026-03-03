@@ -12,12 +12,49 @@ docs = {
     "spec.txt": "These specifications define the technical requirements for the equipment.",
 }
 
-# TODO: Write a tool to read a doc
-# TODO: Write a tool to edit a doc
-# TODO: Write a resource to return all doc id's
-# TODO: Write a resource to return the contents of a particular doc
-# TODO: Write a prompt to rewrite a doc in markdown format
-# TODO: Write a prompt to summarize a doc
+@mcp.tool()
+def read_doc(doc_id: str) -> str:
+    """Read the contents of a document by its ID."""
+    if doc_id not in docs:
+        return f"Error: document '{doc_id}' not found."
+    return docs[doc_id]
+
+
+@mcp.tool()
+def edit_doc(doc_id: str, new_content: str) -> str:
+    """Edit the contents of a document by its ID."""
+    if doc_id not in docs:
+        return f"Error: document '{doc_id}' not found."
+    docs[doc_id] = new_content
+    return f"Document '{doc_id}' updated successfully."
+
+
+@mcp.resource("docs://list")
+def list_docs() -> str:
+    """Return all document IDs."""
+    return "\n".join(docs.keys())
+
+
+@mcp.resource("docs://{doc_id}")
+def get_doc(doc_id: str) -> str:
+    """Return the contents of a particular document."""
+    if doc_id not in docs:
+        return f"Error: document '{doc_id}' not found."
+    return docs[doc_id]
+
+
+@mcp.prompt()
+def rewrite_as_markdown(doc_id: str) -> str:
+    """Prompt to rewrite a document in markdown format."""
+    content = docs.get(doc_id, f"Document '{doc_id}' not found.")
+    return f"Rewrite the following document in well-structured markdown format:\n\n{content}"
+
+
+@mcp.prompt()
+def summarize_doc(doc_id: str) -> str:
+    """Prompt to summarize a document."""
+    content = docs.get(doc_id, f"Document '{doc_id}' not found.")
+    return f"Please provide a concise summary of the following document:\n\n{content}"
 
 
 if __name__ == "__main__":
